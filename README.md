@@ -1,5 +1,11 @@
 # space-structure-fem
-Simple symbolical FE solver optimized for the Politecnico di Milano's Space Structure course.
+Simple symbolical FE solver optimized for the Politecnico di Milano's Space Structures course. 
+This model can:
+
+- Compute the unknown displacements
+- Plot the structure modelled and the deformed one, along with relevant info (i.e, displacements, node number)
+- Stiffness matrix computation
+- Model simplification
 
 <p align="center">
   <img src="https://i.ibb.co/vzY181n/ex1.png" width="550" height="400" />
@@ -92,7 +98,7 @@ where:
 
 Similarly, for a multi-beam structure, the beams can be collected in an array:
 ```MATLAB
-beams = [Beam([1 2], l1, EA, 0, 330), Beam([3 4], l2, EA, 0, 180), Beam([2 4], l1, EA, 0, 210), ...]
+beams = [Beam([1 2], l1, EA, 0, 330), Beam([3 4], l2, EA, 0, 180), ...]
 ```
 
 ## Spring definition
