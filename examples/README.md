@@ -57,29 +57,31 @@ t2 = -0.0001042 deg
 
 ## [Example 3](example_3.m)
 ### Problem
-<img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180618466-290702de-18da-4a70-b40d-7ace485f05af.png">
+<img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180619597-bb5176fb-16db-4b34-a64e-bb6cc09a69e8.png">
 
-- l<sub>1</sub> = 1500 mm
-- α = 30 deg
-- EA = 1 x 10<sup>6</sup> N
-- u<sub>app</sub> = 7 mm
-- v<sub>app</sub> = 2 mm
+- EA<sub>1</sub> = 5 x 10<sup>6</sup> N
+- EA<sub>2</sub> = 2 x 10<sup>6</sup> N
+- EA<sub>3</sub> = 3 x 10<sup>6</sup> N
+- l = 750 mm
+- k<sub>1</sub> = 8 x 10<sup>3</sup> N/mm
+- k<sub>2</sub> = 4 x 10<sup>3</sup> N/mm
+- u<sub>app</sub> = 5 mm
 
 ### Solution
 The problem is modelled as follows:
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/34631826/180618430-b14794f4-1ec9-4881-b9b4-8f01d58718de.png" width="400" />
+  <img src="https://user-images.githubusercontent.com/34631826/180619637-5c52f82e-58e8-41b1-b6a1-c3e341815fd6.png" width="400" />
 </p>
 <p align="center">
-  <em>Figure 1. Modelled problem.</em>
+  <em>Figure 3. Modelled problem.</em>
 </p>
 
 From the structure properties the nodal displacements can be recovered: 
 ```
-u2   = 1.948 mm
-uapp = 7 mm
-vapp = 2 mm
+u1   = 1.842 mm
+uapp = 5 mm
+u3   = 2.5 mm
 ```
 
 ## [Example 4](example_4.m)
