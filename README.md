@@ -68,16 +68,16 @@ where:
 
 For example:
 ```MATLAB
-node = Node("u")    % if only the horizontal movement is prevented
-node = Node("uv")   % if the horizontal and vertical movements are prevented
+node = Node("u")    % only the horizontal movement is prevented
+node = Node("uv")   % the horizontal and vertical movements are prevented
 
 ...
 
-node = Node("uvt")  % if all the movements are prevented
-node = Node("")     % if none of the movements is prevented
+node = Node("uvt")  % all the movements are prevented
+node = Node("")     % none of the movements is prevented
 ```
 
-For a multi-node structure, the nodes can be collected in an array, this will be referred to as **nodes array**:
+For a multi-node structure, the nodes can be collected in an array, this will be later referred to as **nodes array**:
 ```MATLAB
 nodes = [Node("uvt"), Node(""), Node("uv"), ...]
 ```
@@ -117,14 +117,14 @@ spring = Spring(node_num, dir, stiff)
 ```
 
 where:
-* _**node_num**_, associated node position in the nodes array;
+* _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, spring orientation:
   - _u_,  if horizontal;
   - _v_,  if vertical;
   - _t_,  if torsional. 
 * _**stiff**_, spring stiffness, can be symbolical.
 
-Also springs can be collected in an array, code is omitted.
+Springs can be collected in an array too, code is omitted.
 
 ## Structure definition
 The structure can now be assembled, the following syntax holds:
@@ -169,7 +169,7 @@ str.add_concentrated_load(node_num, dir, load)
 ```
 
 where:
-* _**node_num**_, associated node position in the nodes array;
+* _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, load orientation:
   - _u_,  if horizontal force;
   - _v_,  if vertical vorce;
@@ -182,7 +182,7 @@ str.add_distributed_load(beam_num, dir, load)
 ```
 
 where:
-* _**beam_num**_, associated beam position in the beams array;
+* _**beam_num**_, associated beam's position in the beams array;
 * _**dir**_, distributed load direction:
   - _u_,  if horizontal;
   - _v_,  if vertical.
@@ -196,7 +196,7 @@ str.add_prescribed_displacement(node_num, dir, displ)
 ```
 
 where:
-* _**node_num**_, associated node position in the nodes array;
+* _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, displacement direction:
   - _u_,  if horizontal;
   - _v_,  if vertical;
@@ -212,9 +212,9 @@ str.solve(var, val)
 
 where:
 * _**var**_, array of symbolic variables used during the definition of the problem;
-* _**val**_, array of values of the latter symbolic variables (same order).
+* _**val**_, array of respective values (same order).
 
-Once the problem is solved, all the involved quantities are stored inside the **Structure** object, retrieving it from MATLAB's Command Window, all the accessible properties are visible:
+Once the problem is solved, all the involved quantities are stored inside the **Structure** object. The latter can be retrieved from MATLAB's Command Window, all the accessible properties are visible:
 
 ```MATLAB
 >> str
@@ -247,4 +247,4 @@ and similarly with the other properties.
 # Other examples
 Full examples are collected in the [example directory](examples).
 
-[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures
+[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures at Politecnico di Milano,
