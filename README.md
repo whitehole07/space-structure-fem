@@ -214,7 +214,7 @@ where:
 * _**var**_, array of symbolic variables used during the definition of the problem;
 * _**val**_, array of values of the latter symbolic variables (same order).
 
-Once the problem is solved, all the computed involved are stored inside the **Structure** object, retrieving it from MATLAB's Command Window, all the accessible properties are visible:
+Once the problem is solved, all the involved quantities are stored inside the **Structure** object, retrieving it from MATLAB's Command Window, all the accessible properties are visible:
 
 ```MATLAB
 >> str
