@@ -41,7 +41,7 @@ str = Structure([ ...
 You can download the latest release [here](https://github.com/whitehole07/space-structure-fem/releases).
 
 # How to import
-Alternatively, you can directly importe the project to MATLAB following this steps:
+Alternatively, you can import the project directly to MATLAB following these steps:
 
 1. From MATLAB, go to **New** > **Project** > **From Git**.
 2. In the **Repository path** field, paste the following link: `https://github.com/whitehole07/space-structure-fem.git`.
