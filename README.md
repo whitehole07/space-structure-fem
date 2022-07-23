@@ -2,10 +2,11 @@
 Simple symbolical FE solver optimized for the Politecnico di Milano's Space Structures course. 
 This model can:
 
-- Compute the unknown displacements
-- Plot the structure modelled and the deformed one, along with relevant info (i.e, displacements, node number)
-- Stiffness matrix computation
-- Model simplification
+- Obtain both symbolical and numerical solutions
+- Compute stiffness matrix from non-constant beam stiffness
+- Include concentrated/distributed loads, prescribed displacements and springs
+- Retrieve nodal displacements
+- Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
 
 <p align="center">
   <img src="https://i.ibb.co/vzY181n/ex1.png" width="550" height="400" />
@@ -36,14 +37,14 @@ str = Structure([ ...
 );
 ```
 
-# How to import
+# How to import it
 1. From MATLAB, go to **New** > **Project** > **From Git**.
 2. In the **Repository path** field, paste the following link: `https://github.com/whitehole07/space-structure-fem.git`.
 3. Finally, click on **Retrieve**.
 
 You are all set.
 
-# Building the structure
+# How to use it: Building the structure
 This solver is based on three basic elements:
 1. **Nodes**
 2. **Beams**
@@ -94,7 +95,14 @@ where:
 * _**l**_, beam length, can be symbolical;
 * _**EA**_, beam axial stiffness function, can be symbolical;
 * _**EJ**_, beam bending stiffness function, can be symbolical;
-* _**alpha**_, counter-clockwise angle between the horizon and the beam, starting from the first node in  _**nodes**_.
+* _**alpha**_, counter-clockwise angle between the horizon and the beam, starting from the first node in  _**nodes**_ (see Figure 2[^1]).
+
+<p align="center">
+  <img src="https://i.ibb.co/YTvPVkq/Kazam-screenshot-00000.png" width="300" height="200" />
+</p>
+<p align="center">
+  <em>Figure 2. Adopted convention.</em>
+</p>
 
 Similarly, for a multi-beam structure, the beams can be collected in an array:
 ```MATLAB
@@ -153,6 +161,7 @@ str = Structure([ ...
 ```
 
 # Apply loads
+The methods available to apply loads to the structure are here reported.
 
 ## Concentrated loads
 ```MATLAB
@@ -180,6 +189,8 @@ where:
 * _**load**_, distributed load function, can be symbolical.
 
 # Apply prescribed displacements
+To apply a prescribed displacement the following method is available:
+
 ```MATLAB
 str.add_prescribed_displacement(node_num, dir, displ)
 ```
@@ -191,3 +202,49 @@ where:
   - _v_,  if vertical;
   - _t_,  if rotation. 
 * _**displ**_, prescribed displacement, can be symbolical.
+
+# Solve problem
+To solve the problem the following syntax can be used:
+
+```MATLAB
+str.solve(var, val)
+```
+
+where:
+* _**var**_, array of symbolic variables used during the definition of the problem;
+* _**val**_, array of values of the latter symbolic variables (same order).
+
+Once the problem is solved, all the computed involved are stored inside the **Structure** object, retrieving it from MATLAB's Command Window, all the accessible properties are visible:
+
+```MATLAB
+>> str
+
+str = 
+
+  Structure with properties:
+
+      nodes: [...]  % Array of nodes
+      beams: [...]  % Array of beams
+    springs: [...]  % Array of springs
+      u_gen: [...]  % Array of symbolic displacements considered
+          k: [...]  % Symbolic reduced stiffness matrix
+          f: [...]  % Symbolic reduced load array
+          u: [...]  % Symboluc solution for nodal displacements
+      k_num: [...]  % Numerical reduced stiffness matrix
+      f_num: [...]  % Numerical reduced load array
+      u_num: [...]  % Numerical solution for nodal displacements
+        var: [...]  % Array of symbolic variables
+        val: [...]  % Array of values
+```
+
+To get the numerical solution for the nodal displacements:
+```MATLAB
+str.u_num
+```
+
+and similarly with the other properties.
+
+# Other examples
+Full examples are collected in the [example directory](examples).
+
+[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures
