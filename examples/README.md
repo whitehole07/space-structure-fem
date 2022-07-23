@@ -1,7 +1,7 @@
 # Examples
 
 ## [Example 1](example_1.m)
-### Problem
+### Problem[^1]
 <img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180618466-290702de-18da-4a70-b40d-7ace485f05af.png">
 
 - l<sub>1</sub> = 1500 mm
@@ -28,7 +28,7 @@ vapp = 2 mm
 ```
 
 ## [Example 2](example_2.m)
-### Problem
+### Problem[^1]
 <img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180619369-f132ac54-8633-4dc5-a92a-6a029d194293.png">
 
 - l<sub>1</sub> = 1000 mm
@@ -56,7 +56,7 @@ t2 = -0.0001042 deg
 ```
 
 ## [Example 3](example_3.m)
-### Problem
+### Problem[^1]
 <img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180619597-bb5176fb-16db-4b34-a64e-bb6cc09a69e8.png">
 
 - EA<sub>1</sub> = 5 x 10<sup>6</sup> N
@@ -85,7 +85,7 @@ u3   = 2.5 mm
 ```
 
 ## [Example 4](example_4.m)
-### Problem
+### Problem[^1]
 <img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180619854-addddffa-f207-4114-b55b-2e47624da719.png">
 
 - l<sub>1</sub> = 1000 mm
@@ -113,7 +113,7 @@ v3 =  28.8 mm
 ```
 
 ## [Example 5](example_5.m)
-### Problem
+### Problem[^1]
 <img align="right" width="300" src="https://user-images.githubusercontent.com/34631826/180620115-cf352c1c-d039-4021-be35-a4a1cedcd62d.png">
 
 - l<sub>1</sub> = 1000 mm
@@ -142,3 +142,5 @@ u3 =  0 mm
 v3 =  1.693 mm
 t3 = -0.002539 deg
 ```
+
+[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures at Politecnico di Milano.
