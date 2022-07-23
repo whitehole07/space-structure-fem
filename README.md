@@ -9,7 +9,7 @@ This model can:
 - Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
 
 <p align="center">
-  <img src="https://i.ibb.co/vzY181n/ex1.png" width="550" height="400" />
+  <img src="https://user-images.githubusercontent.com/34631826/180617992-e8513fed-c429-469f-8b92-8529d0df06a2.png" width="600" />
 </p>
 <p align="center">
   <em>Figure 1. Example of result produced by the model (see example 1).</em>
@@ -82,7 +82,6 @@ For a multi-node structure, the nodes can be collected in an array, this will be
 nodes = [Node("uvt"), Node(""), Node("uv"), ...]
 ```
 
-
 ## Beam definition
 To define a beam the following syntax holds:
 
@@ -98,11 +97,13 @@ where:
 * _**alpha**_, counter-clockwise angle between the horizon and the beam, starting from the first node in  _**nodes**_ (see Figure 2[^1]).
 
 <p align="center">
-  <img src="https://i.ibb.co/YTvPVkq/Kazam-screenshot-00000.png" width="300" height="200" />
+  <img src="https://i.ibb.co/YTvPVkq/Kazam-screenshot-00000.png" width="400" />
 </p>
 <p align="center">
   <em>Figure 2. Adopted convention.</em>
 </p>
+
+
 
 Similarly, for a multi-beam structure, the beams can be collected in an array:
 ```MATLAB
