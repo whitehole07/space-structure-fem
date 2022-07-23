@@ -37,14 +37,17 @@ str = Structure([ ...
 );
 ```
 
-# How to import it
+# How to download
+You can download the latest release [here](https://github.com/whitehole07/space-structure-fem/releases).
+
+# How to import
 1. From MATLAB, go to **New** > **Project** > **From Git**.
 2. In the **Repository path** field, paste the following link: `https://github.com/whitehole07/space-structure-fem.git`.
 3. Finally, click on **Retrieve**.
 
 You are all set.
 
-# How to use it: Building the structure
+# How to use: Building the structure
 This solver is based on three basic elements:
 1. **Nodes**
 2. **Beams**
