@@ -148,7 +148,7 @@ str = Structure([ ...
 
 # Apply loads
 
-## Concentrated load
+## Concentrated loads
 ```MATLAB
 str.add_concentrated_load(node_num, dir, load)
 ```
@@ -161,7 +161,7 @@ where:
   - _t_,  if torque. 
 * _**load**_, load value, can be symbolical.
 
-## Distributed load
+## Distributed loads
 ```MATLAB
 str.add_distributed_load(beam_num, dir, load)
 ```
@@ -173,7 +173,7 @@ where:
   - _v_,  if vertical.
 * _**load**_, distributed load function, can be symbolical.
 
-# Apply prescribed displacement
+# Apply prescribed displacements
 ```MATLAB
 str.add_prescribed_displacement(node_num, dir, displ)
 ```
