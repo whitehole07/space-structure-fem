@@ -32,6 +32,6 @@ str.add_prescribed_displacement(2, "v", w);
 str.solve([l1 l2 EJ1 EJ2 w q], [1000 1500 1e12 1e11 3 10]);
 
 %% Plot solution
-str.plot()
+str.plot();
 
 
