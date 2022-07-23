@@ -1,5 +1,5 @@
 # space-structure-fem
-Simple symbolical FE solver optimized for the Politecnico di Milano's Space Structures course. 
+Simple symbolical FE solver optimized for the Politecnico di Milano's course of Space Structures. 
 This model can:
 
 - Obtain both symbolical and numerical solutions
