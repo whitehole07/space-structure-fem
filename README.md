@@ -247,4 +247,4 @@ and similarly with the other properties.
 # Other examples
 Full examples are collected in the [example directory](examples).
 
-[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures at Politecnico di Milano,
+[^1]: Credits to prof. Riccardo Vescovini, course of Space Structures at Politecnico di Milano.
