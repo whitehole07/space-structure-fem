@@ -16,7 +16,7 @@ This model can:
 </p>
 
 # Example
-An example is reported hereafter, see the full example [here](examples/example_1.m).
+An example is reported hereafter, see the full version [here](examples/example_1.m).
 ```MATLAB
 %% Build structure
 str = Structure([ ... 
@@ -55,7 +55,7 @@ This solver is based on three basic elements:
 2. **Beams**
 3. **Springs**
 
-After defining them, these elements are combined together to form a compund element, the **Structure**.
+After defining them, these elements are combined together to form a compound element, the **Structure**.
 
 
 ## Node definition
@@ -248,7 +248,7 @@ To get the numerical solution for the nodal displacements:
 str.u_num
 ```
 
-and similarly with the other properties.
+and similarly for the other properties.
 
 # Other examples
 Full examples are collected in the [example directory](examples).
