@@ -1,5 +1,5 @@
 # space-structure-fem
-Simple symbolical FE solver optimized for the Politecnico di Milano's course of Space Structures. 
+Simple symbolical FE solver optimized for Politecnico di Milano's course of Space Structures. 
 This model can:
 
 - Obtain both symbolical and numerical solutions
@@ -130,7 +130,7 @@ where:
   - _t_,  if torsional. 
 * _**stiff**_, spring stiffness, can be symbolical.
 
-Springs can be collected in an array too, code is omitted.
+Springs can be collected in an array too, the code is omitted.
 
 ## Structure definition
 The structure can now be assembled, the following syntax holds:
@@ -167,7 +167,7 @@ str = Structure([ ...
 ```
 
 # Apply loads
-The methods available to apply loads to the structure are here reported.
+The methods available to apply loads to the structure are reported here.
 
 ## Concentrated loads
 ```MATLAB
