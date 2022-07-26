@@ -50,7 +50,7 @@ Alternatively, you can import the project directly to MATLAB following these ste
 
 You are all set.
 
-# How to use: Building the structure
+# How to use: Build the structure
 This solver is based on three basic elements:
 1. **Nodes**
 2. **Beams**
