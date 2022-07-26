@@ -6,6 +6,7 @@ This model can:
 - Compute stiffness matrix from non-constant beam stiffness
 - Include concentrated/distributed loads, prescribed displacements and springs
 - Retrieve nodal displacements
+- Compute the reaction forces
 - Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
 
 <p align="center">
@@ -125,9 +126,9 @@ spring = Spring(node_num, dir, stiff)
 where:
 * _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, spring orientation:
-  - _u_,  if horizontal;
-  - _v_,  if vertical;
-  - _t_,  if torsional. 
+  - _u_,  horizontal;
+  - _v_,  vertical;
+  - _t_,  rotational. 
 * _**stiff**_, spring stiffness, can be symbolical.
 
 Springs can be collected in an array too, the code is omitted.
@@ -177,9 +178,9 @@ str.add_concentrated_load(node_num, dir, load)
 where:
 * _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, load orientation:
-  - _u_,  if horizontal force;
-  - _v_,  if vertical vorce;
-  - _t_,  if torque. 
+  - _u_,  horizontal force;
+  - _v_,  vertical vorce;
+  - _t_,  torque. 
 * _**load**_, load value, can be symbolical.
 
 ## Distributed loads
@@ -190,8 +191,8 @@ str.add_distributed_load(beam_num, dir, load)
 where:
 * _**beam_num**_, associated beam's position in the beams array;
 * _**dir**_, distributed load direction:
-  - _u_,  if horizontal;
-  - _v_,  if vertical.
+  - _u_,  horizontal;
+  - _v_,  vertical.
 * _**load**_, distributed load function, can be symbolical.
 
 # Apply prescribed displacements
@@ -204,9 +205,9 @@ str.add_prescribed_displacement(node_num, dir, displ)
 where:
 * _**node_num**_, associated node's position in the nodes array;
 * _**dir**_, displacement direction:
-  - _u_,  if horizontal;
-  - _v_,  if vertical;
-  - _t_,  if rotation. 
+  - _u_,  horizontal;
+  - _v_,  vertical;
+  - _t_,  rotation. 
 * _**displ**_, prescribed displacement, can be symbolical.
 
 # Solve problem
@@ -223,6 +224,7 @@ where:
 Once the problem is solved, all the involved quantities are stored inside the **Structure** object. The latter can be retrieved from MATLAB's Command Window, all the accessible properties are visible:
 
 ```MATLAB
+
 >> str
 
 str = 
@@ -232,13 +234,22 @@ str =
       nodes: [...]  % Array of nodes
       beams: [...]  % Array of beams
     springs: [...]  % Array of springs
-      u_gen: [...]  % Array of symbolic displacements considered
+         kf: [...]  % Symbolic full stiffness matrix
+         uf: [...]  % Symbolic full nodal displacements
+         ff: [...]  % Symbolic full load array
+         Rf: [...]  % Symbolic full reaction forces
+     kf_num: [...]  % Numerical full stiffness matrix
+     uf_num: [...]  % Numerical full nodal displacements
+     ff_num: [...]  % Numerical full load array
+     Rf_num: [...]  % Numerical full reaction forces
           k: [...]  % Symbolic reduced stiffness matrix
-          f: [...]  % Symbolic reduced load array
           u: [...]  % Symboluc solution for nodal displacements
+          f: [...]  % Symbolic reduced load array
+          R: [...]  % Symbolic reduced reaction forces
       k_num: [...]  % Numerical reduced stiffness matrix
-      f_num: [...]  % Numerical reduced load array
       u_num: [...]  % Numerical solution for nodal displacements
+      f_num: [...]  % Numerical reduced load array
+      R_num: [...]  % Numerical reduced reaction forces
         var: [...]  % Array of symbolic variables
         val: [...]  % Array of values
 ```
