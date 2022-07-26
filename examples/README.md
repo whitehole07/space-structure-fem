@@ -149,7 +149,7 @@ v3 =  1.693 mm
 t3 = -0.002539 deg
 ```
 
-Similary, the reaction force associated to the prescribed displacements is stored in `str.R_num`:
+Similary, the vertical reaction force in node #5 is stored in `str.R_num`:
 
 ```
 Rv5 = -40629.76 N
