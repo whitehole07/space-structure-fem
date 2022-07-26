@@ -1,12 +1,11 @@
 # space-structure-fem
-Simple symbolical FE solver optimized for Politecnico di Milano's course of Space Structures. 
+Simple symbolical and numerical FE solver optimized for Politecnico di Milano's course of Space Structures. 
 This model can:
 
-- Obtain both symbolical and numerical solutions
 - Compute stiffness matrix from non-constant beam stiffness
 - Include concentrated/distributed loads, prescribed displacements and springs
-- Retrieve nodal displacements
-- Compute the reaction forces
+- Compute reaction forces
+- Recover internal actions and local displacements along the beam
 - Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
 
 <p align="center">
