@@ -22,9 +22,9 @@ The problem is modelled as follows:
 
 From the structure properties the nodal displacements can be recovered: 
 ```
-u2   = 1.948 mm
-uapp = 7 mm
-vapp = 2 mm
+u2 = 1.948 mm
+u3 = 7 mm
+v3 = 2 mm
 ```
 
 ## [Example 2](example_2.m)
@@ -79,9 +79,9 @@ The problem is modelled as follows:
 
 From the structure properties the nodal displacements can be recovered: 
 ```
-u1   = 1.842 mm
-uapp = 5 mm
-u3   = 2.5 mm
+u1 = 1.842 mm
+u2 = 5 mm
+u3 = 2.5 mm
 ```
 
 ## [Example 4](example_4.m)
@@ -107,9 +107,15 @@ The problem is modelled as follows:
 
 From the structure properties the nodal displacements can be recovered: 
 ```
-w  =  3 mm
+v2 =  3 mm
 t2 = -0.00627 deg
 v3 =  28.8 mm
+```
+
+Similary, the reaction force associated to the prescribed displacements is stored in `str.R_num`:
+
+```
+Rv2 = -16622.95 N
 ```
 
 ## [Example 5](example_5.m)
@@ -141,6 +147,12 @@ t2 = -0.005269 deg
 u3 =  0 mm
 v3 =  1.693 mm
 t3 = -0.002539 deg
+```
+
+Similary, the reaction force associated to the prescribed displacements is stored in `str.R_num`:
+
+```
+Rv5 = -40629.76 N
 ```
 
 [^1]: Credits to prof. Riccardo Vescovini, course of Space Structures at Politecnico di Milano.
