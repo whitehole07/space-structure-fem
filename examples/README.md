@@ -55,6 +55,11 @@ v2 =  0.2029 mm
 t2 = -0.0001042 deg
 ```
 
+To recover the axial force in the middle of beam #1, the command `[N, ~] = str.get_internal_actions(1, 0.5)` can be used:
+```
+N = -113.626 N
+```
+
 ## [Example 3](example_3.m)
 ### Problem[^1]
 <img align="right" width="400" src="https://user-images.githubusercontent.com/34631826/180619597-bb5176fb-16db-4b34-a64e-bb6cc09a69e8.png">
@@ -82,6 +87,11 @@ From the structure properties the nodal displacements can be recovered:
 u1 = 1.842 mm
 u2 = 5 mm
 u3 = 2.5 mm
+```
+
+To recover the axial force in the middle of beam #2, the command `[N, ~] = str.get_internal_actions(2, 0.5)` can be used:
+```
+N = -10000 N
 ```
 
 ## [Example 4](example_4.m)
