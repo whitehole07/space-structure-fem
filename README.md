@@ -265,7 +265,7 @@ and similarly for the other properties.
 Once the problem is solved, different post processing methods to recover derived quantities are available.
 
 ## Displacements
-To recover the three displacements at any point of a beam, expressed in the beam's local reference frame, the following method can be used:
+To recover the displacements at any point of a beam, expressed in the beam's local reference frame, the following method can be used:
 
 ```MATLAB
 [u, v, t] = str.get_displ_local(beam_num, xi)
@@ -278,7 +278,7 @@ Instead, to recover the displacements expressed in the global reference frame:
 ```
 
 where:
-* _**[u, v, t]**_, horizontal, vertical and rotational displacements;
+* _**[u, v, t]**_, horizontal and vertical displacements and rotation;
 * _**beam_num**_, associated beam's index in the beams array;
 * _**xi**_, normalized position along the beam (xi = x/l), starting from the first node.
 
