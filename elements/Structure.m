@@ -203,7 +203,7 @@ classdef Structure < handle
 
             % Get T and M
             T = beam.get_T();
-            N = beam.N(); dN = diff(N);
+            N = beam.N(); dN = diff(N, x);
             M = [ ...
                 N(1) 0     0     N(4) 0     0
                 0    N(2)  N(3)  0    N(5)  N(6)
@@ -227,6 +227,43 @@ classdef Structure < handle
             
             % Unpack
             u = u_vect(1); v = u_vect(2); t = u_vect(3);
+        end
+
+        function [N, M] = get_internal_actions(obj, beam_num, xi)
+            syms x
+
+            % Init variables
+            beam = obj.beams(beam_num); node = beam.nodes; l = beam.l;
+            EA = beam.EA; EJ = beam.EJ;
+
+            % Get T, N and H
+            T = beam.get_T();
+            dN = diff(beam.N(), x); dN2 = diff(beam.N(), x, 2);
+            H = [ ...
+                EA*dN(1) 0          0          EA*dN(4) 0          0
+                0        EJ*dN2(2)  EJ*dN2(3)  0        EJ*dN2(5)  EJ*dN2(6)
+                ];
+            
+            % Global displacements
+            displ1 = str2sym(fieldnames(node(1).displ));
+            displ2 = str2sym(fieldnames(node(2).displ));
+
+            u_glo = subs([displ1; displ2], ...
+                str2sym(fieldnames(obj.uf_num)), struct2array(obj.uf_num).');
+
+            % Check null displacements
+            for i = 1:length(u_glo)
+                if isSymType(u_glo(i), "variable"); u_glo(i) = 0; end
+            end
+
+            % Get displacement in local coordinates
+            u_local = T * u_glo;
+
+            % Internal actions
+            int_act = subs(subs(H, x, xi*l) * u_local, obj.var, obj.val);
+
+            % Unpack
+            N = vpa(int_act(1), 10); M = vpa(int_act(2), 10);
         end
 
         function plot(obj)
