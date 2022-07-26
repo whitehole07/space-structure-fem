@@ -21,7 +21,8 @@ classdef Beam < handle
         k_glo_red
         
         % FEM contribution
-        k_cont
+        k_cont_full
+        k_cont_red
     end
     
     methods
@@ -50,8 +51,9 @@ classdef Beam < handle
             % Retrieve reduced global and local stiffness matrix
             k_loc_redi = obj.k_loc; k_glo_redi = obj.k_glo;
             for i = 1:2 % nodes
+                displ = struct2array(obj.nodes(i).displ);
                 for j = 1:3 % displacements per node
-                    if obj.nodes(i).displ(j) == 0
+                    if displ(j) == 0
                         % Remove row and column associated
                         k_loc_redi((j + 3*(i-1)), :) = zeros(1, 6);
                         k_loc_redi(:, (j + 3*(i-1))) = zeros(6, 1);
@@ -64,20 +66,17 @@ classdef Beam < handle
             obj.k_loc_red = k_loc_redi; obj.k_glo_red = k_glo_redi;          
         end
 
-        function k_conti = gen_fem_stiff_matrix(obj, u_fem, save)
+        function k_fem = gen_fem_stiff_matrix(obj, u_fem)
             % FEM contribution 
             % (shaped to be summed with other contributions in order to get
             % the assmbled global matrix)
 
-            if nargin < 3
-                save = true;
-            end
-
             % Build pointer vector
             pointer = zeros(1, 6);
             for i = 1:2 % every node
+                nodal_displ = str2sym(fieldnames(obj.nodes(i).displ));
                 for j = 1:3 % every displacement
-                    index = find(u_fem==obj.nodes(i).displ(j));
+                    index = find(u_fem==nodal_displ(j));
                     if index
                         pointer((j + 3*(i-1))) = index;
                     else
@@ -87,15 +86,14 @@ classdef Beam < handle
             end
 
             % Buld FEM contribution
-            k_conti = sym(zeros(length(u_fem), length(u_fem)));
+            k_fem = sym(zeros(length(u_fem), length(u_fem)));
             for i = 1 : 6 % pointer length
                 for j = 1 : 6 % pointer length
                     if pointer(i) && pointer(j)
-                        k_conti(pointer(i), pointer(j)) = obj.k_glo(i, j);
+                        k_fem(pointer(i), pointer(j)) = obj.k_glo(i, j);
                     end
                 end
             end
-            if save; obj.k_cont = k_conti; end
         end
 
         function N = N(obj)

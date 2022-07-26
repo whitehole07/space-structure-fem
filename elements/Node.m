@@ -5,7 +5,7 @@ classdef Node < handle
     properties
         num
 
-        displ = sym([0 0 0])
+        displ = struct
         constr
 
         loads = sym([0 0 0])
@@ -25,16 +25,19 @@ classdef Node < handle
             u = evalin(symengine, strcat('u', num2str(num)));
             v = evalin(symengine, strcat('v', num2str(num)));
             t = evalin(symengine, strcat('t', num2str(num)));
+
+            % Init struct
+            obj.displ = struct(string(u), 0, string(v), 0, string(t), 0);
             
             % Add displacement if not constrained
             if ~contains(obj.constr, 'u')
-                obj.displ(1) = u;
+                obj.displ.(string(u)) = u;
             end
             if ~contains(obj.constr, 'v')
-                obj.displ(2) = v;
+                obj.displ.(string(v)) = v;
             end
             if ~contains(obj.constr, 't')
-                obj.displ(3) = t;
+                obj.displ.(string(t)) = t;
             end
         end
 

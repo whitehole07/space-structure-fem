@@ -8,18 +8,29 @@ classdef Structure < handle
         beams
         springs
 
-        % Generalized vectors
-        u_gen
+        % Full problem - symbolical
+        kf
+        uf
+        ff
+        Rf
 
-        % Symbolical solution
+        % Full problem - numerical
+        kf_num
+        uf_num
+        ff_num
+        Rf_num
+
+        % Reduced problem - symbolical
         k
-        f
         u
+        f
+        R
 
-        % Numerical solution
+        % Reduced problem - numerical
         k_num
-        f_num
         u_num
+        f_num
+        R_num
 
         % Post processing
         var
@@ -30,7 +41,7 @@ classdef Structure < handle
         prescribed_displ = []
     end
     
-    methods
+    methods(Access = public)
         function obj = Structure(nodes, beams, springs)
             %STRUCTURE Construct an instance of this class
             %   Detailed explanation goes here
@@ -49,8 +60,11 @@ classdef Structure < handle
             end
             obj.beams = beams;
 
+            % Full problem assembly
+            obj.full_assembly();
+
             % Assembly of general problem
-            obj.assembly();
+            obj.red_assembly();
 
             % Add springs
             if nargin >=3
@@ -62,62 +76,7 @@ classdef Structure < handle
             obj.check_nodes();
         end
 
-        function obj = check_nodes(obj)
-            deleted = 0;
-            for i = 1:length(obj.u_gen)
-                if ~any(obj.k(i-deleted, :) ~= 0) && ~any(obj.k(:, i-deleted) ~= 0) % If row and column is zero
-                    % Remove associated displacement
-                    obj.k(i-deleted, :) = []; obj.k(:, i-deleted) = [];
-                    obj.u_gen(i-deleted) = [];
-                    deleted = deleted + 1;
-                end
-            end
-        end
-
-        function obj = assembly(obj)
-            % Symbolical reduced displacements vector
-            for i = 1:length(obj.nodes)
-                for j = 1:3 % number of displacements per node
-                    if obj.nodes(i).displ(j) ~= 0
-                        % Add displacement
-                        obj.u_gen = [obj.u_gen; obj.nodes(i).displ(j)];
-                    end
-                end
-            end
-
-            % Assemble FEM contribution for every beam
-            obj.k = sym(zeros(length(obj.u_gen), length(obj.u_gen)));
-            for i = 1:length(obj.beams) 
-                obj.beams(i).gen_fem_stiff_matrix(obj.u_gen);
-                obj.k = obj.k + obj.beams(i).k_cont;
-            end
-        end
-
-        function obj = load_assembly(obj)
-            % Assembly loads
-            obj.f = sym(zeros(length(obj.u_gen), 1));
-            for i = 1:length(obj.nodes)
-                % Build pointer vector
-                pointer = zeros(1, 3);
-                for j = 1:3 % every displacement
-                    index = find(obj.u_gen==obj.nodes(i).displ(j));
-                    if index
-                        pointer(j) = index;
-                    else
-                        pointer(j) = 0;
-                    end
-                end
-                
-                % Add contribution
-                for j = 1:3 % pointer length
-                    if pointer(j)
-                        obj.f(pointer(j)) = obj.f(pointer(j)) + obj.nodes(i).loads(j).';
-                    end
-                end
-            end
-        end
-
-        function obj = add_distributed_load(obj, beam_num, dir, load)
+        function add_distributed_load(obj, beam_num, dir, load)
             syms x
             switch dir
                 case "u"
@@ -135,7 +94,7 @@ classdef Structure < handle
             obj.beams(beam_num).nodes(2).add_load(fn(4:6));
         end
 
-        function obj = add_concentrated_load(obj, node_num, dir, load)
+        function add_concentrated_load(obj, node_num, dir, load)
             switch dir
                 case "u"
                     fn = [load 0 0];
@@ -149,89 +108,83 @@ classdef Structure < handle
             obj.nodes(node_num).add_load(fn);
         end
 
-        function obj = add_prescribed_displacement(obj, node_num, dir, displ)
-            % Update displacement
-            switch dir
-                case "u"
-                    replaced = obj.nodes(node_num).displ(1);
-                    obj.nodes(node_num).displ(1) = displ;
-                case "v"
-                    replaced = obj.nodes(node_num).displ(2);
-                    obj.nodes(node_num).displ(2) = displ;
-                case "t"
-                    replaced = obj.nodes(node_num).displ(3);
-                    obj.nodes(node_num).displ(3) = displ;
-            end
-            
-            % Global index
-            global_index = find(obj.u_gen==replaced);
+        function add_prescribed_displacement(obj, node_num, dir, displ)
+            % Replaced displacement
+            replaced = obj.nodes(node_num).displ.(strcat(dir, num2str(node_num)));
+
+            % Replace in node
+            obj.nodes(node_num).displ.(strcat(dir, num2str(node_num))) = displ;
 
             % Replace
-            obj.u_gen(global_index) = displ;
+            obj.uf.(string(replaced)) = displ;
+            obj.u.(string(replaced)) = displ;
 
             % Add original displacement number to list of prescribed displacements
-            obj.prescribed_displ = [obj.prescribed_displ global_index];
+            obj.prescribed_displ = [obj.prescribed_displ string(replaced)];
         end
 
-        function obj = add_springs(obj, springs)
+        function add_springs(obj, springs)
             for i = 1:length(springs)
                 % Update displacement
-                switch springs(i).dir
-                    case "u"
-                        displ = obj.nodes(springs(i).node_num).displ(1);
-                    case "v"
-                        displ = obj.nodes(springs(i).node_num).displ(2);
-                    case "t"
-                        displ = obj.nodes(springs(i).node_num).displ(3);
-                end
+                displ = obj.nodes(springs(i).node_num).displ.( ...
+                    strcat(springs(i).dir, num2str(springs(i).node_num)));
     
-                % Find in global displacements
-                index = find(obj.u_gen==displ);
+                % Find in global displacements - full
+                index_full = find(struct2array(obj.uf)==displ);
+
+                % Find in global displacements - red
+                index_red = find(struct2array(obj.u)==displ);
                 
                 % Add contribution
-                if index
-                    obj.k(index, index) = obj.k(index, index) + springs(i).stiff;
+                if index_full
+                    obj.kf(index_full, index_full) = ...
+                    obj.kf(index_full, index_full) + springs(i).stiff;
+                end
+                if index_red
+                    obj.k(index_red, index_red) = ...
+                    obj.k(index_red, index_red) + springs(i).stiff;
                 end
             end
         end
-
-        function obj = femsolve(obj)
-            k_pre = obj.k; f_pre = obj.f; u_pre = obj.u_gen;
-            % Remove prescribed rows
-            for i = 1:length(obj.prescribed_displ)
-                % Remove row
-                k_pre(obj.prescribed_displ(i) - (i-1), :) = [];
-                f_pre(obj.prescribed_displ(i) - (i-1)) = [];
-                u_pre(obj.prescribed_displ(i) - (i-1)) = [];
-            end
-
-            % Compute remaining displacements
-            u_rem = solve(k_pre * obj.u_gen == f_pre, u_pre);
-
-            % Assemble final displacement
-            if isstruct(u_rem)
-                obj.u = subs(obj.u_gen, u_pre, struct2cell(u_rem));
-            else
-                obj.u = subs(obj.u_gen, u_pre, u_rem);
-            end
-        end
-
-        function obj = solve(obj, var, val)
+  
+        function solve(obj, var, val)
             % Set variable and values
             obj.var = var; obj.val = val;
 
-            % Assemble loads
-            obj.load_assembly();
+            % Assemble loads - Full
+            obj.ff = obj.load_assembly(str2sym(fieldnames(obj.uf)));
+
+            % Assemble loads - Reduced
+            obj.f = obj.load_assembly(str2sym(fieldnames(obj.u)));
             
             % Symbolical solution
             obj.femsolve();
+            obj.get_reactions();
 
-            % Numerical solution
+            % Numerical solution - Full
+            obj.kf_num = vpa(subs(obj.kf, var, val), 4);
+            obj.ff_num = vpa(subs(obj.ff, var, val), 4);
+            
+            obj.uf_num = obj.uf;
+            for i = string(cell2mat(fieldnames(obj.uf)))'
+                obj.uf_num.(i) = vpa(subs(obj.uf.(i), var, val), 4);
+                obj.Rf_num.(strcat("R", i)) = vpa(subs(obj.Rf.(strcat("R", i)), var, val), 10);
+            end
+
+            % Numerical solution - Reduced
             obj.k_num = vpa(subs(obj.k, var, val), 4);
             obj.f_num = vpa(subs(obj.f, var, val), 4);
-            obj.u_num = vpa(subs(obj.u, var, val), 4);
-        end
+            
+            obj.u_num = obj.u;
+            for i = string(cell2mat(fieldnames(obj.u)))'
+                obj.u_num.(i) = vpa(subs(obj.u.(i), var, val), 4);
+            end
+            for i = string(cell2mat(fieldnames(obj.R)))'
+                obj.R_num.(i) = vpa(subs(obj.R.(i), var, val), 10);
+            end
 
+        end
+        
         function [u, v, t] = get_displ_global(obj, beam_num, xi)
             % Replace displacements
             [u_loc, v_loc, t_loc] = obj.get_displ_local(beam_num, xi);
@@ -258,7 +211,11 @@ classdef Structure < handle
                 ];
 
             % Replace displacements
-            u_glo = subs([node(1).displ.'; node(2).displ.'], obj.u_gen, obj.u_num);
+            displ1 = str2sym(fieldnames(node(1).displ));
+            displ2 = str2sym(fieldnames(node(2).displ));
+
+            u_glo = subs([displ1; displ2], ...
+                str2sym(fieldnames(obj.uf_num)), struct2array(obj.uf_num).');
 
             % Check null displacements
             for i = 1:length(u_glo)
@@ -331,27 +288,31 @@ classdef Structure < handle
 
             % Add displacements
             for i = 1:length(obj.nodes)
-                if obj.nodes(i).displ(1) ~= 0 && any(ismember(obj.u_gen, obj.nodes(i).displ(1)))
+                displ = string(cell2mat(fieldnames(obj.nodes(i).displ)));
+                value = struct2array(obj.nodes(i).displ);
+                u_used = string(cell2mat(fieldnames(obj.u)));
+
+                if value(1) ~= 0 && any(ismember(u_used, displ(1)))
                     quiver(ncoords(i, 1), ncoords(i, 2), ref/10, 0, ...
                         'off', 'color', 'black')
 
                     text(ncoords(i, 1)+(ref/20), ncoords(i, 2)-(ref/60), ...
-                        string(obj.nodes(i).displ(1)), "HorizontalAlignment", "center");
+                        string(displ(1)), "HorizontalAlignment", "center");
                 end
-                if obj.nodes(i).displ(2) ~= 0 && any(ismember(obj.u_gen, obj.nodes(i).displ(2)))
+                if value(2) ~= 0 && any(ismember(u_used, displ(2)))
                     quiver(ncoords(i, 1), ncoords(i, 2), 0, ref/10, ...
                         'off', 'color', 'black')
 
                     h = text(ncoords(i, 1)-(ref/60), ncoords(i, 2)+(ref/20), ...
-                        string(obj.nodes(i).displ(2)), "HorizontalAlignment", "center");
+                        string(displ(2)), "HorizontalAlignment", "center");
                     set(h,'Rotation',90);
                 end
-                if obj.nodes(i).displ(3) ~= 0 && any(ismember(obj.u_gen, obj.nodes(i).displ(3)))
+                if value(3) ~= 0 && any(ismember(u_used, displ(3)))
                     plot(ncoords(i, 1), ncoords(i, 2), 'kx', 'Markersize', 15)
                     plot(ncoords(i, 1), ncoords(i, 2), 'ko', 'Markersize', 15)
 
                     text(ncoords(i, 1)+(ref/40), ncoords(i, 2)+(ref/40), ...
-                        string(obj.nodes(i).displ(3)), "HorizontalAlignment", "center");
+                        string(displ(3)), "HorizontalAlignment", "center");
                 end
             end
 
@@ -363,6 +324,186 @@ classdef Structure < handle
             xlabel("x [m]")
             ylabel("y [m]")
             axis equal
+        end
+    end
+
+    methods(Access = private) 
+        function check_nodes(obj)
+            % Unpack structure
+            u_value = struct2array(obj.u); u_field = fieldnames(obj.u);
+
+            % Re-init u
+            obj.u = struct;
+
+            % Loop
+            deleted = 0;
+            for i = 1:length(u_value)
+                if ~any(obj.k(i-deleted, :) ~= 0) && ~any(obj.k(:, i-deleted) ~= 0) % If row and column is zero
+                    % Remove associated displacement
+                    obj.k(i-deleted, :) = []; obj.k(:, i-deleted) = [];
+                    deleted = deleted + 1;
+
+                    % Set to zero in full problem
+                    obj.uf.(u_field{i}) = 0;
+                else
+                    % Re-assembly of u
+                    obj.u.(u_field{i}) = u_value(i);
+                end
+            end
+        end
+
+        function full_assembly(obj)
+            % Build displacements and reaction forces
+            obj.uf = struct; obj.Rf = obj.uf;
+            for i = 1:length(obj.nodes)
+                for j = strcat(["u", "v", "t"], num2str(obj.nodes(i).num)) % every displacement    
+                    % Assembly
+                    obj.uf.(j) = obj.nodes(i).displ.(j);
+                    obj.Rf.(strcat("R", j)) = str2sym(strcat('R', j));
+                end
+            end
+
+            % Build stiffness matrix
+            obj.kf = sym(zeros(length(fieldnames(obj.uf)), length(fieldnames(obj.uf))));
+            for i = 1:length(obj.beams)
+                % Generate and save contribution
+                k_fem = obj.beams(i).gen_fem_stiff_matrix(str2sym(fieldnames(obj.uf)));
+                obj.beams(i).k_cont_full = k_fem;
+                
+                % Update global matrix
+                obj.kf = obj.kf + obj.beams(i).k_cont_full;
+            end
+        end
+
+        function red_assembly(obj)
+            % Symbolical reduced displacements vector
+            obj.u = obj.uf;
+            for i = 1:length(obj.nodes)
+                for j = strcat(["u", "v", "t"], num2str(obj.nodes(i).num)) % every displacement
+                    if obj.nodes(i).displ.(j) == 0
+                        % Remove field
+                        obj.u = rmfield(obj.u, j);
+                    end
+                end
+            end
+
+            % Build stiffness matrix
+            % Assemble FEM contribution for every beam
+            u_array = struct2array(obj.u);
+            obj.k = sym(zeros(length(u_array), length(u_array)));
+            for i = 1:length(obj.beams)
+                % Generate and save contribution
+                k_fem = obj.beams(i).gen_fem_stiff_matrix(u_array);
+                obj.beams(i).k_cont_red = k_fem;
+                
+                % Update global matrix
+                obj.k = obj.k + obj.beams(i).k_cont_red;
+            end
+        end
+
+        function f_fem = load_assembly(obj, u_fem)
+            % Assembly loads
+            f_fem = sym(zeros(length(u_fem), 1));
+            for i = 1:length(obj.nodes)
+                % Build pointer vector
+                pointer = zeros(1, 3);
+                y = 1;
+                for j = str2sym(strcat(["u", "v", "t"], num2str(obj.nodes(i).num))) % every displacement
+                    index = find(u_fem==j);
+                    if index
+                        pointer(y) = index;
+                    else
+                        pointer(y) = 0;
+                    end
+                    y = y + 1;
+                end
+                
+                % Add contribution
+                for j = 1:3 % pointer length
+                    if pointer(j)
+                        f_fem(pointer(j)) = f_fem(pointer(j)) + obj.nodes(i).loads(j).';
+                    end
+                end
+            end
+        end
+        
+        function femsolve(obj)
+            k_pre = obj.k; f_pre = obj.f; u_pre = struct2array(obj.u);
+            % Remove prescribed rows
+            for i = 1:length(obj.prescribed_displ)
+                index = find(str2sym(fieldnames(obj.u))==obj.prescribed_displ(i));
+                % Remove row
+                k_pre(index - (i-1), :) = [];
+                f_pre(index - (i-1)) = [];
+                u_pre(index - (i-1)) = [];
+            end
+
+            % Compute remaining displacements
+            u_rem = solve(k_pre * struct2array(obj.u).' == f_pre, u_pre);
+
+            % Assemble final displacement
+            if isstruct(u_rem)
+                for i = u_pre
+                    obj.u.(string(i)) = u_rem.(string(i));
+                    obj.uf.(string(i)) = u_rem.(string(i));
+                end
+            else
+                obj.u.(string(u_pre)) = u_rem;
+                obj.uf.(string(u_pre)) = u_rem;
+            end
+        end
+       
+        function get_reactions(obj)
+            % Init variables
+            k_r = obj.kf; u_r = struct2array(obj.uf).';
+            f_r = obj.ff; obj.R = obj.Rf;
+
+            % Loop through equations to remove null-reaction equations
+            deleted = 0;
+            for i = 1:length(obj.nodes)
+                displ = obj.nodes(i).displ;
+                dof = strcat(["u", "v", "t"], num2str(obj.nodes(i).num));
+                for y = 1:3
+                    % Recover dof
+                    j = dof(y);
+
+                    if displ.(j) ~= 0
+                        if ~isempty(obj.prescribed_displ)
+                            if j == obj.prescribed_displ
+                                continue
+                            end
+                        end
+
+                        % Set to zero - Full
+                        obj.Rf.(strcat("R", j)) = 0;
+    
+                        % Remove field - red
+                        obj.R = rmfield(obj.R, strcat("R", j));
+    
+                        % Remove row
+                        k_r((y + 3*(i-1))-deleted, :) = [];
+                        f_r((y + 3*(i-1))-deleted) = [];
+
+                        % Update deleted
+                        deleted = deleted + 1;
+                    end
+                end
+            end
+
+            % Solve problem
+            R_s = solve(k_r*u_r - f_r == struct2array(obj.R).', struct2array(obj.R).');
+
+            % Assemble final displacement
+            fields = string(cell2mat(fieldnames(obj.R))).';
+            if isstruct(R_s)
+                for i = fields
+                    obj.R.(i) = R_s.(i);
+                    obj.Rf.(i) = R_s.(i);
+                end
+            else
+                obj.R.(fields) = R_s;
+                obj.Rf.(fields) = R_s;
+            end
         end
     end
 end
