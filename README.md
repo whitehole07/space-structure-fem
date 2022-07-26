@@ -124,7 +124,7 @@ spring = Spring(node_num, dir, stiff)
 ```
 
 where:
-* _**node_num**_, associated node's position in the nodes array;
+* _**node_num**_, associated node's index in the nodes array;
 * _**dir**_, spring orientation:
   - _u_,  horizontal;
   - _v_,  vertical;
@@ -176,7 +176,7 @@ str.add_concentrated_load(node_num, dir, load)
 ```
 
 where:
-* _**node_num**_, associated node's position in the nodes array;
+* _**node_num**_, associated node's index in the nodes array;
 * _**dir**_, load orientation:
   - _u_,  horizontal force;
   - _v_,  vertical vorce;
@@ -189,7 +189,7 @@ str.add_distributed_load(beam_num, dir, load)
 ```
 
 where:
-* _**beam_num**_, associated beam's position in the beams array;
+* _**beam_num**_, associated beam's index in the beams array;
 * _**dir**_, distributed load direction:
   - _u_,  horizontal;
   - _v_,  vertical.
@@ -260,6 +260,39 @@ str.u_num
 ```
 
 and similarly for the other properties.
+
+# Post processing
+Once the problem is solved, different post processing methods to recover derived quantities are available.
+
+## Displacements
+To recover the three displacements at any point of a beam, expressed in the beam's local reference frame, the following method can be used:
+
+```MATLAB
+[u, v, t] = str.get_displ_local(beam_num, xi)
+```
+
+Instead, to recover the displacements expressed in the global reference frame:
+
+```MATLAB
+[u, v, t] = str.get_displ_global(beam_num, xi)
+```
+
+where:
+* _**[u, v, t]**_, horizontal, vertical and rotational displacements;
+* _**beam_num**_, associated beam's index in the beams array;
+* _**xi**_, normalized position along the beam (xi = x/l), starting from the first node.
+
+## Internal actions
+To recover the internal actions at any point of a beam the following method can be used:
+
+```MATLAB
+[N, M] = str.get_internal_actions(beam_num, xi)
+```
+
+where:
+* _**[N, M]**_, axial force and bending moment;
+* _**beam_num**_, associated beam's index in the beams array;
+* _**xi**_, normalized position along the beam (xi = x/l), starting from the first node.
 
 # Other examples
 Full examples are collected in the [example directory](examples).
