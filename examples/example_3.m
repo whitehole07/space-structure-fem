@@ -33,6 +33,6 @@ str.add_prescribed_displacement(2, "u", uapp);
 str.solve([l EA1 EA2 EA3 k1 k2 uapp], [750 5e6 2e6 3e6 8e3 4e3 5]);
 
 %% Plot solution
-str.plot()
+str.plot();
 
 

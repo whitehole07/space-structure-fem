@@ -32,6 +32,6 @@ str.add_concentrated_load(2, "v", P);
 str.solve([l1 l2 a b E P], [1000 300 100 10 72e3 5e4]);
 
 %% Plot solution
-str.plot()
+str.plot();
 
 

@@ -33,7 +33,7 @@ str.add_prescribed_displacement(3, "v", vapp);
 str.solve([EA l1 l2 uapp vapp], [1e6 1500 3000*cosd(30) 7 2]);
 
 %% Plot solution
-str.plot()
+str.plot();
 
 
 

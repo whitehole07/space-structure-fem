@@ -25,12 +25,12 @@ str = Structure([ ...
 );
 
 %% Apply loads
-str.add_distributed_load(2, "v", q);
+str.add_distributed_load(2, "transversal", q);
 
 %% Solve problem
 str.solve([l1 l2 EJ1 EA1 EA2 q], [1000 1000/cosd(30) 1e12 1e6 1e8 10]);
 
 %% Plot solution
-str.plot()
+str.plot();
 
 

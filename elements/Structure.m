@@ -81,16 +81,25 @@ classdef Structure < handle
 
         function add_distributed_load(obj, beam_num, dir, load)
             syms x
+            alpha = obj.beams(beam_num).alpha;
             switch dir
-                case "u"
+                case "axial"
                     load = [load 0 0 load 0 0];
-                case "v"
+                case "transversal"
                     load = [0 load load 0 load load];
             end
             
             % Compute forces at nodes
             N = obj.beams(beam_num).N();
             fn = int(N.' .* load.', x, [0 obj.beams(beam_num).l]);
+
+            % Project onto nodes
+            switch dir
+                case "axial"
+                    fn = [fn(1)*cosd(alpha) fn(1)*sind(alpha) 0 fn(4)*cosd(alpha) fn(4)*sind(alpha) 0];
+                case "transversal"
+                    fn = [fn(2)*sind(alpha) fn(2)*cosd(alpha) fn(3) fn(5)*sind(alpha) fn(5)*cosd(alpha) fn(6)];
+            end
 
             % Update nodes
             obj.beams(beam_num).nodes(1).add_load(fn(1:3));

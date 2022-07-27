@@ -23,7 +23,7 @@ str = Structure([ ...
 );
 
 %% Apply loads
-str.add_distributed_load(2, "v", q);
+str.add_distributed_load(2, "transversal", q);
 
 %% Apply prescribed displacements
 str.add_prescribed_displacement(2, "v", w);
