@@ -4,7 +4,7 @@ This model can:
 
 - Compute stiffness matrix from non-constant beam stiffness
 - Include concentrated/distributed loads, prescribed displacements and springs
-- Compute reaction forces
+- Compute reaction forces and strain energy
 - Recover internal actions and local displacements along the beam
 - Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
 
@@ -230,27 +230,28 @@ str =
 
   Structure with properties:
 
-      nodes: [...]  % Array of nodes
-      beams: [...]  % Array of beams
-    springs: [...]  % Array of springs
-         kf: [...]  % Symbolic full stiffness matrix
-         uf: [...]  % Symbolic full nodal displacements
-         ff: [...]  % Symbolic full load array
-         Rf: [...]  % Symbolic full reaction forces
-     kf_num: [...]  % Numerical full stiffness matrix
-     uf_num: [...]  % Numerical full nodal displacements
-     ff_num: [...]  % Numerical full load array
-     Rf_num: [...]  % Numerical full reaction forces
-          k: [...]  % Symbolic reduced stiffness matrix
-          u: [...]  % Symboluc solution for nodal displacements
-          f: [...]  % Symbolic reduced load array
-          R: [...]  % Symbolic reduced reaction forces
-      k_num: [...]  % Numerical reduced stiffness matrix
-      u_num: [...]  % Numerical solution for nodal displacements
-      f_num: [...]  % Numerical reduced load array
-      R_num: [...]  % Numerical reduced reaction forces
-        var: [...]  % Array of symbolic variables
-        val: [...]  % Array of values
+        nodes: [...]  % Array of nodes
+        beams: [...]  % Array of beams
+      springs: [...]  % Array of springs
+           kf: [...]  % Symbolic full stiffness matrix
+           uf: [...]  % Symbolic full nodal displacements
+           ff: [...]  % Symbolic full load array
+           Rf: [...]  % Symbolic full reaction forces
+       kf_num: [...]  % Numerical full stiffness matrix
+       uf_num: [...]  % Numerical full nodal displacements
+       ff_num: [...]  % Numerical full load array
+       Rf_num: [...]  % Numerical full reaction forces
+            k: [...]  % Symbolic reduced stiffness matrix
+            u: [...]  % Symboluc solution for nodal displacements
+            f: [...]  % Symbolic reduced load array
+            R: [...]  % Symbolic reduced reaction forces
+        k_num: [...]  % Numerical reduced stiffness matrix
+        u_num: [...]  % Numerical solution for nodal displacements
+        f_num: [...]  % Numerical reduced load array
+        R_num: [...]  % Numerical reduced reaction forces
+strain_energy: [...]  % Numerical strain energy
+          var: [...]  % Array of symbolic variables
+          val: [...]  % Array of values
 ```
 
 To get the numerical solution for the nodal displacements:
