@@ -275,20 +275,63 @@ classdef Structure < handle
             % Matrix of node coordinates
             ncoords = zeros(length(obj.nodes), 2);
 
+            % Node hierarchy
+            node_hierarchy = zeros(length(obj.nodes), 2);
+            for j = 1:length(obj.nodes)
+                for y = obj.beams
+                    if any(obj.nodes(j) == y.nodes)
+                        node_hierarchy(j, :) = [j, node_hierarchy(j, 2) + 1];
+                    end
+                end
+            end
+            node_hierarchy = sortrows(node_hierarchy, 2, 'descend');
+            
+            % Determine node position, loop through combinations, considering hierarchy
+            for nn1 = node_hierarchy(:, 1)'
+                for nn2 = node_hierarchy(:, 1)'
+                    % Permutation order doesn't matter
+                    if find(node_hierarchy(:, 1)==nn2) <= find(node_hierarchy(:, 1)==nn1)
+                        continue
+                    end
+                    % Find beam according to hierarchy
+                    found = false;
+                    for i = obj.beams
+                        beam_num = find(obj.beams==i);
+                        if all([i.nodes(1).num, i.nodes(2).num] == [nn1, nn2])
+                            angle = i.alpha; found = true;
+                            break
+                        elseif all([i.nodes(1).num, i.nodes(2).num] == [nn2, nn1])
+                            angle = 180 + i.alpha; found = true;
+                            break 
+                        end
+                    end
+                    
+                    % If beam doesn't exist
+                    if ~found
+                        continue
+                    end
+
+                    % Beam length
+                    l = subs(obj.beams(beam_num).l, obj.var, obj.val);
+    
+                    % Coordinates
+                    x_end = ncoords(nn1, 1) + l*cosd(angle);
+                    y_end = ncoords(nn1, 2) + l*sind(angle);
+    
+                    % Update node coordinates
+                    ncoords(nn2, :) = [x_end y_end];
+                end
+            end
+            
+            % Plot
             figure("Position", [100 100 1000 700]);
             for i = 1:length(obj.beams)
-                % Array of local x
-                xi = linspace(0, subs(obj.beams(i).l, obj.var, obj.val), 2);
-
                 % Coordinates
-                xb = ncoords(obj.beams(i).nodes(1).num, 1) + xi*cosd(obj.beams(i).alpha);
-                yb = ncoords(obj.beams(i).nodes(1).num, 2) + xi*sind(obj.beams(i).alpha);
-
-                % Update node coordinates
-                ncoords(obj.beams(i).nodes(2).num, :) = [xb(end) yb(end)];
+                x = [ncoords(obj.beams(i).nodes(1).num, 1), ncoords(obj.beams(i).nodes(2).num, 1)];
+                y = [ncoords(obj.beams(i).nodes(1).num, 2), ncoords(obj.beams(i).nodes(2).num, 2)];
 
                 % Plot beam
-                plot(xb, yb, 'linewidth', 3)
+                plot(x, y, 'linewidth', 3)
                 hold on
                 grid on
             end
@@ -302,14 +345,14 @@ classdef Structure < handle
                 n = 5; xbc = zeros(1, n); ybc = zeros(1, n); j = 1;
                 for xi = linspace(0, 1, n)
                     % Coordinate
-                    xb = ncoords(obj.beams(i).nodes(1).num, 1) + l*xi*cosd(obj.beams(i).alpha);
-                    yb = ncoords(obj.beams(i).nodes(1).num, 2) + l*xi*sind(obj.beams(i).alpha);
+                    x_end = ncoords(obj.beams(i).nodes(1).num, 1) + l*xi*cosd(obj.beams(i).alpha);
+                    y_end = ncoords(obj.beams(i).nodes(1).num, 2) + l*xi*sind(obj.beams(i).alpha);
     
                     % Deformed
                     [xbd, ybd, ~] = obj.get_displ_global(i, xi);
 
                     % Deformed coordinate
-                    xbc(j) = xb+xbd; ybc(j) = yb+ybd;
+                    xbc(j) = x_end+xbd; ybc(j) = y_end+ybd;
                     j = j + 1;
                 end
                 plot(xbc, ybc, 'r-', 'linewidth', 0.5)
