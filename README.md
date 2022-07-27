@@ -178,7 +178,7 @@ where:
 * _**node_num**_, associated node's index in the nodes array;
 * _**dir**_, load orientation:
   - _u_,  horizontal force;
-  - _v_,  vertical vorce;
+  - _v_,  vertical force;
   - _t_,  torque. 
 * _**load**_, load value, can be symbolical.
 
@@ -190,8 +190,8 @@ str.add_distributed_load(beam_num, dir, load)
 where:
 * _**beam_num**_, associated beam's index in the beams array;
 * _**dir**_, distributed load direction:
-  - _u_,  horizontal;
-  - _v_,  vertical.
+  - _axial_,  beam axial direction;
+  - _transversal_, beam transversal direction.
 * _**load**_, distributed load function, can be symbolical.
 
 # Apply prescribed displacements
