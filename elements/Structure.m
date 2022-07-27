@@ -32,6 +32,9 @@ classdef Structure < handle
         f_num
         R_num
 
+        % Others
+        strain_energy
+
         % Post processing
         var
         val
@@ -183,6 +186,9 @@ classdef Structure < handle
                 obj.R_num.(i) = vpa(subs(obj.R.(i), var, val), 10);
             end
 
+            % Strain energy
+            obj.strain_energy = double(0.5 * ...
+                struct2array(obj.u_num) * obj.k_num * struct2array(obj.u_num).');
         end
         
         function [u, v, t] = get_displ_global(obj, beam_num, xi)
@@ -518,6 +524,11 @@ classdef Structure < handle
                 u_pre(index - (i-1)) = [];
             end
 
+            % Check singularity (Rigid motions)
+            if det(k_pre) == 0
+                error("The global stiffness matrix is singular, consider constraining a node to avoid rigid motions.")
+            end
+
             % Compute remaining displacements
             u_rem = solve(k_pre * struct2array(obj.u).' == f_pre, u_pre);
 
@@ -568,6 +579,12 @@ classdef Structure < handle
                         deleted = deleted + 1;
                     end
                 end
+            end
+
+            % Check if there are reaction forces
+            if isempty(struct2array(obj.R))
+                obj.R_num = obj.R;
+                return
             end
 
             % Solve problem
