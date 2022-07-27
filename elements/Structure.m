@@ -515,6 +515,12 @@ classdef Structure < handle
         
         function femsolve(obj)
             k_pre = obj.k; f_pre = obj.f; u_pre = struct2array(obj.u);
+
+            % Check singularity (Rigid motions)
+            if det(k_pre) == 0
+                error("The global stiffness matrix is singular, consider constraining a node to avoid rigid motions.")
+            end
+
             % Remove prescribed rows
             for i = 1:length(obj.prescribed_displ)
                 index = find(str2sym(fieldnames(obj.u))==obj.prescribed_displ(i));
@@ -522,11 +528,6 @@ classdef Structure < handle
                 k_pre(index - (i-1), :) = [];
                 f_pre(index - (i-1)) = [];
                 u_pre(index - (i-1)) = [];
-            end
-
-            % Check singularity (Rigid motions)
-            if det(k_pre) == 0
-                error("The global stiffness matrix is singular, consider constraining a node to avoid rigid motions.")
             end
 
             % Compute remaining displacements
