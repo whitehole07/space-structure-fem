@@ -98,7 +98,7 @@ classdef Structure < handle
                 case "axial"
                     fn = [fn(1)*cosd(alpha) fn(1)*sind(alpha) 0 fn(4)*cosd(alpha) fn(4)*sind(alpha) 0];
                 case "transversal"
-                    fn = [fn(2)*sind(alpha) fn(2)*cosd(alpha) fn(3) fn(5)*sind(alpha) fn(5)*cosd(alpha) fn(6)];
+                    fn = [-fn(2)*sind(alpha) fn(2)*cosd(alpha) fn(3) -fn(5)*sind(alpha) fn(5)*cosd(alpha) fn(6)];
             end
 
             % Update nodes

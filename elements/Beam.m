@@ -28,15 +28,7 @@ classdef Beam < handle
     methods
         function obj = Beam(nodes, l, EA, EJ, alpha)
             %BEAM Construct an instance of this class
-            %   Detailed explanation goes here
-            arguments
-                nodes
-                l
-                EA
-                EJ
-                alpha (1, 1) double = NaN
-            end
-            
+            %   Detailed explanation goes here            
             obj.nodes = nodes;
             obj.l = l;
             obj.EA = EA; obj.EJ = EJ;
