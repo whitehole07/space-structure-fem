@@ -11,7 +11,7 @@
 - v<sub>app</sub> = 2 mm
 
 ### Solution
-The problem is modelled as follows:
+The problem is modelled as follow:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180618430-b14794f4-1ec9-4881-b9b4-8f01d58718de.png" width="400" />
@@ -39,7 +39,7 @@ v3 = 2 mm
 - q = 10 N/mm
 
 ### Solution
-The problem is modelled as follows:
+The problem is modelled as follow:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180619452-c66895b2-0328-4d19-a407-13404646d8bc.png" width="400" />
@@ -73,7 +73,7 @@ N = -113.626 N
 - u<sub>app</sub> = 5 mm
 
 ### Solution
-The problem is modelled as follows:
+The problem is modelled as follow:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180619637-5c52f82e-58e8-41b1-b6a1-c3e341815fd6.png" width="400" />
@@ -106,7 +106,7 @@ N = -10000 N
 - q = 10 N/mm
 
 ### Solution
-The problem is modelled as follows:
+The problem is modelled as follow:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180619979-a78a8d85-0c6e-4cf7-9b00-b355e7d2fc19.png" width="400" />
@@ -140,7 +140,7 @@ Rv2 = -16622.95 N
 - P = 5 x 10<sup>4</sup> N
 
 ### Solution
-The problem is modelled as follows:
+The problem is modelled as follow:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180620197-f48b22e9-f3af-4e37-9022-7de9fd9e8a4e.png" width="400" />
