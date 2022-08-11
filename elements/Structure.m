@@ -161,6 +161,9 @@ classdef Structure < handle
   
         function solve(obj, var, val)
             % Set variable and values
+            if nargin < 3
+                var = []; val = [];
+            end
             obj.var = var; obj.val = val;
 
             % Assemble loads - Full
@@ -416,8 +419,8 @@ classdef Structure < handle
 
             % Add details
             title("Structure Modelled")
-            xlabel("x [m]")
-            ylabel("y [m]")
+            xlabel("x")
+            ylabel("y")
             axis equal
         end
     end
