@@ -21,8 +21,8 @@ classdef Beam < handle
         k_glo_red
         
         % FEM contribution
-        k_cont_full
-        k_cont_red
+        k_cont_full % Full FEM contribution
+        k_cont_red  % Reduced FEM contribution
     end
     
     methods
