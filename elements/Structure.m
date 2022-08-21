@@ -448,6 +448,13 @@ classdef Structure < handle
                     obj.u.(u_field{i}) = u_value(i);
                 end
             end
+
+            % Generate new reduced stiffness matrix for every beam
+            u_array = struct2array(obj.u);
+            for beam = obj.beams
+                % Update reduced stiffness matrices
+                beam.k_cont_red = beam.gen_fem_stiff_matrix(u_array);
+            end
         end
 
         function full_assembly(obj)
