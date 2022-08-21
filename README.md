@@ -258,8 +258,14 @@ To get the numerical solution for the nodal displacements:
 ```MATLAB
 str.u_num
 ```
-
 and similarly for the other properties.
+
+Instead, single beam's stiffness matrix can be recovered from each beam object:
+```MATLAB
+str.beams(beam_num).k_cont_red % Beam contribution to global problem
+```
+
+
 
 # Post processing
 Once the problem is solved, different post processing methods to recover derived quantities are available.
