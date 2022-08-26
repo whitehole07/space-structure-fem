@@ -38,11 +38,13 @@ str = Structure([ ...
 ```
 # Disclaimer
 ```diff
-- This software is not meant to replace the student's personal calculations.
-- The code may be subject to bugs or yield wrong results, the code's author assumes no responsibility in this sense.
-- The code can be used at the risk and benefit of the individual. 
-- It is highly recommended to often download the newly released versions as they may fix bugs or add new features.
+- This software is not meant to replace the student's personal calculations;
+- The code may be subject to bugs or yield wrong results;
+- The author of the code assumes no responsibility in this sense;
+- The code can be used at the risk and benefit of the individual; 
 ```
+
+It is highly recommended to often download the newly released versions as they may fix bugs or add new features.
 
 # How to download
 You can download the latest release [here](https://github.com/whitehole07/space-structure-fem/releases).
