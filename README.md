@@ -1,22 +1,23 @@
 # space-structure-fem
-Simple symbolical and numerical FE solver optimized for Politecnico di Milano's course of Space Structures. 
-This model can:
+A symbolic and numerical finite element solver specifically optimized for the Space Structures course at Politecnico di Milano.  
 
-- Compute stiffness matrix from non-constant beam stiffness
-- Include concentrated/distributed loads, prescribed displacements and springs
-- Compute reaction forces and strain energy
-- Recover internal actions and local displacements along the beam
-- Plot the model and its deformed version, along with relevant info (i.e, displacements, node number)
+This model is capable of:  
+
+- Computing the stiffness matrix for beams with non-uniform stiffness properties.  
+- Incorporating concentrated and distributed loads, prescribed displacements, and elastic supports.  
+- Determining reaction forces and strain energy.  
+- Recovering internal forces and local displacements along the beam.  
+- Generating visual representations of the model and its deformed configuration, including relevant information such as displacements and node numbering.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/34631826/180617992-e8513fed-c429-469f-8b92-8529d0df06a2.png" width="600" />
 </p>
 <p align="center">
-  <em>Figure 1. Example of result produced by the model (see example 1).</em>
+  <em>Figure 1. Example of a result produced by the model (see example 1).</em>
 </p>
 
 # Example
-An example is reported hereafter, see the full version [here](examples/example_1.m).
+An example is presented below; the full version is available [here](examples/example_1.m).
 ```MATLAB
 %% Build structure
 str = Structure([ ... 
@@ -38,19 +39,19 @@ str = Structure([ ...
 ```
 # Disclaimer
 ```diff
-- This software is not meant to replace the student's personal calculations;
-- The code may be subject to bugs or yield wrong results;
-- The author of the code assumes no responsibility in this sense;
-- The code can be used at the risk and benefit of the individual; 
+- This software is intended to support, not replace, the student's own calculations.  
+- The code may contain bugs or produce incorrect results.  
+- The author assumes no responsibility for any errors or inaccuracies.  
+- Use of the code is at the individual's own risk and discretion.
 ```
 
-It is highly recommended to often download the newly released versions as they may fix bugs or add new features.
+It is strongly recommended to frequently download the latest versions, as they may include bug fixes and new features.
 
 # How to download
 You can download the latest release [here](https://github.com/whitehole07/space-structure-fem/releases).
 
 # How to import
-Alternatively, you can import the project directly to MATLAB following these steps:
+Alternatively, you can import the project directly to MATLAB by following these steps:
 
 1. From MATLAB, go to **New** > **Project** > **From Git**.
 2. In the **Repository path** field, paste the following link: `https://github.com/whitehole07/space-structure-fem.git`.
